@@ -3,16 +3,12 @@ from typing import Annotated
 from datetime import date
 from pydantic import BaseModel
 
-app = FastAPI(title="BookingApp",
-    description="MDtext",
-    summary="My first app",
-    version="0.0.1",
-)
+app = FastAPI()
 
-class SHotel(BaseModel):
+""" class SHotel(BaseModel):
     address: str
     name: str
-    stars: int
+    stars: int """
 
 class HotelsSearchArgs:
     def __init__(
@@ -23,18 +19,18 @@ class HotelsSearchArgs:
             has_spa: bool = None,
             stars: Annotated[int, Query(..., ge=1, le=5)] = None
         ):
-        self.location = location
-        self.date_from = date_from
-        self.date_to = date_to
-        self.has_spa = has_spa
-        self.stars = stars
+            self.location = location
+            self.date_from = date_from
+            self.date_to = date_to
+            self.has_spa = has_spa
+            self.stars = stars
 
 
 @app.get('/hotels')
 def get_hotels(
-    search_agrs: HotelsSearchArgs = Depends()
+        search_args: HotelsSearchArgs = Depends()
 ):
-    return search_args
+  return search_args
 
 class SBooking(BaseModel):
     room_id: int
