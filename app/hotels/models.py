@@ -19,6 +19,6 @@ class Hotels(Base):
     name: Mapped[str]
     location: Mapped[str]
     services: Mapped[list[str]] = mapped_column(JSON)
-    room_quantity: Mapped[int]
+    rooms_quantity: Mapped[int]
     image_id: Mapped[int]
 
