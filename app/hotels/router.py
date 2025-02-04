@@ -9,10 +9,10 @@ from app.hotels.schemas import SHotel, SHotelInfo
 
 router = APIRouter(
     prefix='/hotels',
-    tags=['Отели', 'Поиск по отелям']
+    tags=['Отели']
 )
 
-@router.get('{location}')
+@router.get('/{location}')
 async def get_hotels(location: str, 
                date_from: date = Query(..., description=f"Например, {datetime.now().date()}"), 
                date_to: date = Query(..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}")

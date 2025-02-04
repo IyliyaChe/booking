@@ -23,5 +23,5 @@ class Bookings(Base):
     date_from: Mapped[date] = mapped_column(Date)
     date_to: Mapped[date] = mapped_column(Date)
     price: Mapped[int]
-    total_cost: Mapped[int] = mapped_column(Computed('(date_from - date_to) * price'))
-    total_days: Mapped[int] = mapped_column(Computed('date_from - date_to'))
+    total_cost: Mapped[int] = mapped_column(Computed('(date_to - date_from) * price'))
+    total_days: Mapped[int] = mapped_column(Computed('date_to - date_from'))
