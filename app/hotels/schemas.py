@@ -11,8 +11,7 @@ class SHotel(BaseModel):
     image_id: int
 
 
-    class Config:
-        from_attrubute = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SHotelInfo(SHotel):
     rooms_left: int

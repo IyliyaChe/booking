@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Query
 
 from app.exceptions import CannotBookHotelForLongPeriod, DateFromCannotBeAfterDateTo
@@ -23,3 +23,10 @@ async def get_hotels(location: str,
         raise CannotBookHotelForLongPeriod 
     hotels = await HotelDAO.find_all_free(location, date_from, date_to)
     return hotels
+
+@router.get('/id/{hotel_id}', include_in_schema=True)
+async def get_hotel_by_id(
+    hotel_id: int
+    ) -> Optional[SHotel]:
+    hotel = await HotelDAO.find_one_or_none(id = hotel_id)
+    return hotel

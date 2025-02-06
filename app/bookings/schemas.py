@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from datetime import date
 
@@ -11,6 +12,15 @@ class SBooking(BaseModel):
     price: int
     total_cost: int
     total_days: int
+
+    class Config:
+        from_attributes = True
+
+class SFullBooking(SBooking):
+    image_id: int
+    name: str
+    description: str
+    services: List[str]
 
     class Config:
         from_attributes = True

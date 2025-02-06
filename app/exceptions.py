@@ -42,3 +42,7 @@ class DateFromCannotBeAfterDateTo(BookingException):
 class CannotBookHotelForLongPeriod(BookingException):
     status_code=status.HTTP_400_BAD_REQUEST
     detail="Невозможно забронировать отель сроком более месяца"
+
+class BookingNotExist(BookingException):
+    status_code=status.HTTP_409_CONFLICT
+    detail="Бронирования не существует"
