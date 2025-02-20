@@ -1,4 +1,6 @@
+import asyncio
 from datetime import date, datetime, timedelta
+from fastapi_cache.decorator import cache
 from typing import List, Optional
 from fastapi import APIRouter, Query
 
@@ -12,7 +14,9 @@ router = APIRouter(
     tags=['Отели']
 )
 
+
 @router.get('/{location}')
+@cache(expire=60)
 async def get_hotels(location: str, 
                date_from: date = Query(..., description=f"Например, {datetime.now().date()}"), 
                date_to: date = Query(..., description=f"Например, {(datetime.now() + timedelta(days=14)).date()}")
