@@ -1,4 +1,7 @@
 from datetime import date
+
+from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 from app.exceptions import RoomCannotBeBooked, BookingNotExist
 from app.users.dao import UserDAO
 from app.users.dependences import get_current_user, get_token
@@ -6,9 +9,10 @@ from app.users.models import Users
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy import select
 from app.bookings.dao import BookingDAO
+from app.tasks.tasks import send_booking_confirmation_email
 
 
-from app.bookings.schemas import SBooking, SFullBooking
+from app.bookings.schemas import SBooking, SFullBooking, SNewBooking
 from app.database import async_session_maker
 from app.bookings.models import Bookings
 
@@ -25,14 +29,19 @@ async def get_bookings(user: Users = Depends(get_current_user)) -> list[SFullBoo
 
 @router.post('')
 async def add_booking(
-    room_id: int,
-    date_from: date,
-    date_to: date,
-    user: Users = Depends(get_current_user)
+#    room_id: int,
+#    date_from: date,
+#    date_to: date,
+    booking: SNewBooking,
+    user: Users = Depends(get_current_user),
 ):
-    booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
+    booking = await BookingDAO.add(user.id, booking.room_id, booking.date_from, booking.date_to)
     if not booking:
         raise RoomCannotBeBooked
+ #  booking_dict = parse_obj_as(SBooking, booking).dict()
+    booking = TypeAdapter(SNewBooking).validate_python(booking).model_dump()
+    send_booking_confirmation_email.delay(booking, user.email)
+    return booking
 
 @router.delete('/{booking_id}')
 async def del_booking(
