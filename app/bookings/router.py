@@ -10,6 +10,7 @@ from fastapi import APIRouter, Request, Depends
 from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.tasks.tasks import send_booking_confirmation_email
+from fastapi import BackgroundTasks
 
 
 from app.bookings.schemas import SBooking, SFullBooking, SNewBooking
@@ -32,6 +33,7 @@ async def add_booking(
 #    room_id: int,
 #    date_from: date,
 #    date_to: date,
+    background_tasks:BackgroundTasks,
     booking: SNewBooking,
     user: Users = Depends(get_current_user),
 ):
@@ -40,7 +42,12 @@ async def add_booking(
         raise RoomCannotBeBooked
  #  booking_dict = parse_obj_as(SBooking, booking).dict()
     booking = TypeAdapter(SNewBooking).validate_python(booking).model_dump()
+
+    #вариант с celery
     send_booking_confirmation_email.delay(booking, user.email)
+    
+    #вариант с background_tasks
+    #background_tasks.add_task(send_booking_confirmation_email, booking, user.email)
     return booking
 
 @router.delete('/{booking_id}')

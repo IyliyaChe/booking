@@ -9,6 +9,7 @@ from PIL import Image
 from app.tasks.email_templates import create_booking_confirmation_template
 import smtplib
 import ezgmail
+from time import sleep
 
 
 @celery.task
@@ -22,13 +23,13 @@ def process_pic(
     im_resized_1000_500.save(f'app/static/images/resized_1000_500_{im_path.name}')
     im_resized_200_100.save(f'app/static/images/resized_200_100_{im_path.name}')
 
+# для background_task первую строку закомментировать
 @celery.task
 def send_booking_confirmation_email(
     booking: dict,
     email_to: EmailStr,
 ):
     email_to_mock = settings.SMTP_USER
-
 # Обходной путь для работы из сети
     ezgmail.send(email_to_mock, 'Подтверждение бронирования', 
         f'''
