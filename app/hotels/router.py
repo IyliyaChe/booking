@@ -25,6 +25,7 @@ async def get_hotels(location: str,
         raise DateFromCannotBeAfterDateTo
     if (date_to - date_from).days > 31:
         raise CannotBookHotelForLongPeriod 
+ #   await asyncio.sleep(3)
     hotels = await HotelDAO.find_all_free(location, date_from, date_to)
     return hotels
 

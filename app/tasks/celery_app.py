@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 
 from app.config import settings
 
@@ -6,5 +7,16 @@ from app.config import settings
 celery = Celery(
     "tasks", 
     broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
-    include=['app.tasks.tasks']
+    include=[
+        'app.tasks.tasks',
+        'app.tasks.scheduled'
+        ]
 )
+
+celery.conf.beat_schedule = {
+    'luboe_nazvanie': {
+        "task": "periodic_task",
+        "schedule": 5 #секунды
+        # "schedule": crontab(minute='15', hour='01'),
+    }
+}

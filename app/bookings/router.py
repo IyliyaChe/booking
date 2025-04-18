@@ -33,7 +33,7 @@ async def add_booking(
 #    room_id: int,
 #    date_from: date,
 #    date_to: date,
-    background_tasks:BackgroundTasks,
+#    background_tasks:BackgroundTasks,
     booking: SNewBooking,
     user: Users = Depends(get_current_user),
 ):
@@ -48,6 +48,7 @@ async def add_booking(
     
     #вариант с background_tasks
     #background_tasks.add_task(send_booking_confirmation_email, booking, user.email)
+    
     return booking
 
 @router.delete('/{booking_id}')

@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, Query, Depends
 from fastapi.staticfiles import StaticFiles
 
@@ -22,15 +23,16 @@ from fastapi_cache.decorator import cache
 
 from redis import asyncio as aioredis
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # при запуске
     redis = aioredis.from_url(
         f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
         encoding="utf8",
         decode_responses=True,)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
+    # при выключении
 
 
 # @app.on_event("startup")
