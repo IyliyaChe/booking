@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
 from sqlalchemy import and_, func, insert, or_, select
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
-from app.database import async_session_maker
+from app.database import async_session_maker, async_session_maker_nullpool
+from sqlalchemy.orm import joinedload
 
 from app.hotels.rooms.models import Rooms
 from app.users.models import Users
@@ -113,6 +114,21 @@ class BookingDAO(BaseDAO):
 
             else:
                 return None
+            
+    @classmethod
+    async def find_to_remind(
+        cls,
+        days: int):
+        async with async_session_maker_nullpool() as session:
+            query = (
+                select(Bookings.__table__.columns, Users.__table__.columns)
+                .join(Users, Bookings.user_id == Users.id)
+                # Фильтр ниже выдаст брони, до начала которых остается `days` дней
+                # В нашем пет-проекте можно брать все брони, чтобы протестировать функционал
+                .filter(Bookings.date_from - date.today() == days)
+            )
+            result = await session.execute(query)
+            return result.mappings().all()
 
 
 
