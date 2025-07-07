@@ -21,12 +21,12 @@ celery.conf.beat_schedule = {
     },
     'reminder_1': {
         "task": "reminder_0900",
-        "schedule": 60, #секунды
-    #    "schedule": crontab(minute='31', hour='09'),
+    #    "schedule": 60, #секунды
+        "schedule": crontab(minute='47', hour='09'),
     },
     'reminder_2': {
         "task": "reminder_1530",
-        "schedule": 35, #секунды
-    #    "schedule": crontab(minute='32', hour='09'),
+    #    "schedule": 35, #секунды
+        "schedule": crontab(minute='48', hour='09'),
     },
 }

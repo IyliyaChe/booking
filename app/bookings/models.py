@@ -1,6 +1,6 @@
 from sqlalchemy import JSON, Column, Computed, Date, ForeignKey, Integer, String
 from app.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
 
 """ class Bookings(Base):
@@ -25,3 +25,8 @@ class Bookings(Base):
     price: Mapped[int]
     total_cost: Mapped[int] = mapped_column(Computed('abs(date_to - date_from) * price'))
     total_days: Mapped[int] = mapped_column(Computed('abs(date_to - date_from)'))
+
+    user = relationship("Users", back_populates="booking")
+
+    def __str__(self):
+        return f"Booking #{self.id}"

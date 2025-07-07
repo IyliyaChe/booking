@@ -7,7 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 from datetime import date
 from pydantic import BaseModel
+from app.admin.views import BookingsAdmin, UserAdmin
 from app.bookings.router import router as router_bookings
+from app.users.models import Users
 from app.users.router import router as router_users
 from app.hotels.router import router as router_hotels
 from app.hotels.rooms.router import router as router_rooms
@@ -22,6 +24,9 @@ from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 
 from redis import asyncio as aioredis
+
+from app.database import engine
+from sqladmin import Admin, ModelView
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -94,3 +99,11 @@ def get_hotels(
         search_args: HotelsSearchArgs = Depends()
 ):
   return search_args
+
+
+
+admin = Admin(app, engine)
+
+
+admin.add_view(UserAdmin)
+admin.add_view(BookingsAdmin)
