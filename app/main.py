@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 from datetime import date
 from pydantic import BaseModel
-from app.admin.views import BookingsAdmin, UserAdmin
+from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UserAdmin
 from app.bookings.router import router as router_bookings
 from app.users.models import Users
 from app.users.router import router as router_users
@@ -107,3 +107,5 @@ admin = Admin(app, engine)
 
 admin.add_view(UserAdmin)
 admin.add_view(BookingsAdmin)
+admin.add_view(RoomsAdmin)
+admin.add_view(HotelsAdmin)

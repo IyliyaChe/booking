@@ -1,7 +1,14 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import JSON, Column, Computed, Date, ForeignKey, Integer, String
 from app.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
+
+if TYPE_CHECKING:
+    # Убирает предупреждения отсутствия импорта и неприятные подчеркивания в 
+    # PyCharm и VSCode
+    from app.hotels.rooms.models import Rooms
+    from app.users.models import Users
 
 """ class Bookings(Base):
     __tablename__ = 'bookings'
@@ -26,7 +33,8 @@ class Bookings(Base):
     total_cost: Mapped[int] = mapped_column(Computed('abs(date_to - date_from) * price'))
     total_days: Mapped[int] = mapped_column(Computed('abs(date_to - date_from)'))
 
-    user = relationship("Users", back_populates="booking")
+    rooms: Mapped["Rooms"] = relationship(back_populates="bookings")
+    user: Mapped["Users"] = relationship(back_populates="bookings")
 
     def __str__(self):
         return f"Booking #{self.id}"

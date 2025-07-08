@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import JSON, Column, ForeignKey, Integer, String
+
 from app.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from app.bookings.models import Bookings
 
 """ class Users(Base):
     __tablename__ = 'users'
@@ -15,7 +20,7 @@ class Users(Base):
     email: Mapped[str]
     hashed_password: Mapped[str]
 
-    booking = relationship("Bookings", back_populates="user")
+    bookings:Mapped["Bookings"] = relationship(back_populates="user")
 
     def __str__(self):
         return f"User #{self.email}"
