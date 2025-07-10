@@ -30,6 +30,8 @@ async def get_rooms_by_time(
     rooms = await RoomDAO.find_all_rooms(hotel_id, date_from, date_to)
     return rooms
 
+
+
 @router.get("/example/no_orm")
 async def get_noorm():
     async with async_session_maker() as session:

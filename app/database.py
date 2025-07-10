@@ -5,9 +5,16 @@ from sqlalchemy import NullPool
 from app.config import settings
 #DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
-engine = create_async_engine(settings.DATABASE_URL)
+if settings.MODE == "TEST":
+    DATABASE_URL = settings.TEST_DATABASE_URL
+    DATABASE_PARAMS = {"poolclass": NullPool}
+else:
+    DATABASE_URL = settings.DATABASE_URL
+    DATABASE_PARAMS = {}
 
-DATABASE_PARAMS = {"poolclass": NullPool}
+engine = create_async_engine(settings.DATABASE_URL, **DATABASE_PARAMS)
+
+#DATABASE_PARAMS = {"poolclass": NullPool}
 engine_nullpool = create_async_engine(settings.DATABASE_URL, **DATABASE_PARAMS)
 
 
