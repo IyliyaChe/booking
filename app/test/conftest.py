@@ -11,6 +11,9 @@ from app.hotels.models import Hotels
 from app.hotels.rooms.models import Rooms
 from app.users.models import Users
 
+from httpx import AsyncClient, ASGITransport
+from app.main import app as fastapi_app
+
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
     assert settings.MODE == "TEST"
@@ -55,3 +58,13 @@ def event_loop(request):
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+@pytest.fixture(scope="function")
+async def ac():
+    async with AsyncClient(transport=ASGITransport(fastapi_app), base_url='http://test') as ac:
+        yield ac
+
+@pytest.fixture(scope="function")
+async def session():
+    async with async_session_maker() as session:
+        yield session
