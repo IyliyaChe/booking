@@ -1,5 +1,5 @@
-from typing import List
-from pydantic import BaseModel
+from typing import List, Optional
+from pydantic import BaseModel, ConfigDict
 from datetime import date
 
 
@@ -13,19 +13,19 @@ class SBooking(BaseModel):
     total_cost: int
     total_days: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SFullBooking(SBooking):
     image_id: int
     name: str
-    description: str
+    description: Optional[str]
     services: List[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SNewBooking(BaseModel):
     room_id: int
     date_from: date
     date_to: date
+
+    model_config = ConfigDict(from_attributes=True)

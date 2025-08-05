@@ -43,7 +43,7 @@ class BookingDAO(BaseDAO):
     @classmethod
     async def add(
         cls,
-        user_id: Users,
+        user_id: int,
         room_id: int,
         date_from: date,
         date_to: date,
@@ -59,7 +59,7 @@ class BookingDAO(BaseDAO):
         async with async_session_maker() as session:
             booked_rooms = select(Bookings).where(
                 and_(
-                    Bookings.room_id ==1,
+                    Bookings.room_id == room_id,
                     or_(
                         and_(
                             Bookings.date_from >= date_from,
@@ -85,11 +85,12 @@ class BookingDAO(BaseDAO):
                 ).where(Rooms.id == room_id).group_by(
                     Rooms.quantity, booked_rooms.c.room_id
                 )
-            
-            # print(get_rooms_left.compile(engine, compile_kwargs={'literal_binds': True}))
+
+            #print(get_rooms_left.compile(engine, compile_kwargs={'literal_binds': True}))
 
             rooms_left = await session.execute(get_rooms_left)
             rooms_left: int = rooms_left.scalar()
+            print(rooms_left)
 
             if rooms_left > 0:
                 get_price = select(Rooms.price).filter_by(id=room_id)

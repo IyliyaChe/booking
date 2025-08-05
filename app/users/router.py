@@ -23,11 +23,12 @@ async def register_user(user_data: SUserAuth):
 @router.post('/login')
 async def login_user(response: Response, user_data: SUserAuth):
     user = await authentificate_user(user_data.email, user_data.hashed_password)
-    if not user:
-        raise IncorrectEmailOrPasswordException
+    # if not user:
+    #     raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(user.id)})
-    response.set_cookie('booking_access_token', access_token)
-    return access_token
+    response.set_cookie('booking_access_token', access_token, httponly = True)
+#    return access_token
+    return {"access_token": access_token}
 
 @router.post('/logout')
 async def logout_user(response: Response):

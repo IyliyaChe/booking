@@ -44,7 +44,7 @@ async def add_booking(
     booking = TypeAdapter(SNewBooking).validate_python(booking).model_dump()
 
     #вариант с celery
-    send_booking_confirmation_email.delay(booking, user.email)
+    #send_booking_confirmation_email.delay(booking, user.email)
     
     #вариант с background_tasks
     #background_tasks.add_task(send_booking_confirmation_email, booking, user.email)
